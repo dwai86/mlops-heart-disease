@@ -1,0 +1,9 @@
+artifact_location: file:C:/dwai_github/mlops-heart-disease/mlruns/165205225467797502
+creation_time: 1791272000005
+effective_trace_archival_retention: null
+experiment_id: '165205225467797502'
+last_update_time: 1791272000005
+lifecycle_stage: active
+name: heart-disease-prediction
+trace_location: null
+workspace: default

@@ -1,0 +1,10 @@
+artifact_location: file:C:/dwai_github/mlops-heart-disease/mlruns/165205225467797502/models/m-ac0317d018c7407a8cee7d88509a22d7/artifacts
+creation_timestamp: 1791273331664
+experiment_id: '165205225467797502'
+last_updated_timestamp: 1791273340030
+model_id: m-ac0317d018c7407a8cee7d88509a22d7
+model_type: null
+name: best_model
+source_run_id: 48d9b373b1994317ab5f28211e447328
+status: 2
+status_message: null

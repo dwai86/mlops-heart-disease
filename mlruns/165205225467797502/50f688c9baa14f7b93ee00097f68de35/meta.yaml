@@ -1,0 +1,14 @@
+artifact_uri: file:C:/dwai_github/mlops-heart-disease/mlruns/165205225467797502/50f688c9baa14f7b93ee00097f68de35/artifacts
+end_time: 1791273331560
+entry_point_name: ''
+experiment_id: '165205225467797502'
+lifecycle_stage: active
+run_id: 50f688c9baa14f7b93ee00097f68de35
+run_name: random_forest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1791273330898
+status: 3
+tags: []
+user_id: dedwa
