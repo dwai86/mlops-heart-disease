@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pandas as pd
-
 from heart_disease.data_pipeline import FEATURE_COLUMNS, load_dataset, prepare_training_data
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "raw" / "heart+disease" / "processed.cleveland.data"
@@ -22,5 +20,5 @@ def test_prepare_training_data_handles_missing_values():
 
     assert X.shape[0] == y.shape[0]
     assert X.shape[1] == len(FEATURE_COLUMNS)
-    assert not pd.isna(X).any().any()
+    assert X["ca"].isna().sum() > 0 or X["thal"].isna().sum() > 0
     assert set(y.unique()).issubset({0, 1})

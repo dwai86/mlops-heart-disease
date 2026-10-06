@@ -1,0 +1,14 @@
+artifact_uri: file:C:/dwai_github/mlops-heart-disease/mlruns/165205225467797502/6dc04e851575400c9d659579f39f44b9/artifacts
+end_time: 1791274142066
+entry_point_name: ''
+experiment_id: '165205225467797502'
+lifecycle_stage: active
+run_id: 6dc04e851575400c9d659579f39f44b9
+run_name: logistic_regression
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1791274141107
+status: 3
+tags: []
+user_id: dedwa

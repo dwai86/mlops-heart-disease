@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from heart_disease.data_pipeline import FEATURE_COLUMNS, predict_record, run_training
 
@@ -31,6 +31,8 @@ if not logger.handlers:
 
 
 class PatientInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     age: float
     sex: float
     cp: float
@@ -44,9 +46,6 @@ class PatientInput(BaseModel):
     slope: float
     ca: float
     thal: float
-
-    class Config:
-        extra = "forbid"
 
 
 app = FastAPI(title="Heart Disease Prediction API", version="1.0.0")
@@ -100,7 +99,7 @@ def metrics() -> Response:
 @app.post("/predict")
 def predict(payload: PatientInput) -> dict:
     model = load_model()
-    record = payload.dict()
+    record = payload.model_dump()
     result = predict_record(model, record)
     return {"features": {name: record[name] for name in FEATURE_COLUMNS}, **result}
 

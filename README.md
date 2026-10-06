@@ -14,6 +14,8 @@ This repository implements an end-to-end machine learning operations pipeline fo
 - `kubernetes/deployment.yaml` — deployment template for local Kubernetes
 - `monitoring/prometheus.yml` — Prometheus scraping config
 - `docs/final_report.md` — summary of the MLOps workflow and results
+- `docs/final_report.docx` — a longer formal report suitable for submission
+- `screenshots/architecture_diagram.png` — architecture diagram for reporting
 
 ## Dataset
 
@@ -86,4 +88,4 @@ pytest -q
 
 ## Documentation
 
-See `docs/final_report.md` for a concise report covering EDA, model choice, experiment tracking, deployment flow, and operational monitoring.
+See `docs/final_report.md` for a concise report covering EDA, model choice, experiment tracking, deployment flow, and operational monitoring. A more formal submission-friendly Word version is also available at `docs/final_report.docx`, and the system architecture diagram is in `screenshots/architecture_diagram.png`.

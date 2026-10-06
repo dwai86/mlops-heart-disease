@@ -12,7 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -56,23 +56,16 @@ def load_dataset(path: str | Path) -> pd.DataFrame:
 def prepare_training_data(frame: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
     frame = frame.copy()
     frame[TARGET_COLUMN] = (frame[TARGET_COLUMN] > 0).astype(int)
-    X = frame[FEATURE_COLUMNS]
-    y = frame[TARGET_COLUMN]
-    imputer = SimpleImputer(strategy="median")
-    X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=FEATURE_COLUMNS)
-    return X_imputed, y
+    X = frame[FEATURE_COLUMNS].copy()
+    y = frame[TARGET_COLUMN].astype(int)
+    return X, y
 
 
 def build_model_pipeline(model) -> Pipeline:
-    preprocessor = Pipeline(
+    return Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler()),
-        ]
-    )
-    return Pipeline(
-        steps=[
-            ("preprocessor", preprocessor),
             ("model", model),
         ]
     )
@@ -106,14 +99,22 @@ def run_training(data_path: str | Path, artifact_dir: str | Path, tracking_uri: 
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment("heart-disease-prediction")
 
-    model_specs = {
-        "logistic_regression": LogisticRegression(max_iter=1000, random_state=42),
-        "random_forest": RandomForestClassifier(
-            n_estimators=300,
-            random_state=42,
-            min_samples_leaf=2,
-            class_weight="balanced",
-        ),
+    model_search_spaces = {
+        "logistic_regression": {
+            "estimator": LogisticRegression(max_iter=2000, random_state=42, class_weight="balanced"),
+            "param_grid": {
+                "model__C": [0.1, 1.0, 10.0],
+                "model__solver": ["liblinear", "lbfgs"],
+            },
+        },
+        "random_forest": {
+            "estimator": RandomForestClassifier(random_state=42, class_weight="balanced"),
+            "param_grid": {
+                "model__n_estimators": [100, 200, 300],
+                "model__max_depth": [None, 5, 10],
+                "model__min_samples_leaf": [1, 2, 4],
+            },
+        },
     }
 
     best_name = None
@@ -121,41 +122,42 @@ def run_training(data_path: str | Path, artifact_dir: str | Path, tracking_uri: 
     best_metrics = None
     model_results: Dict[str, Dict[str, float]] = {}
 
-    for model_name, estimator in model_specs.items():
-        model_pipeline = build_model_pipeline(estimator)
+    for model_name, config in model_search_spaces.items():
+        model_pipeline = build_model_pipeline(config["estimator"])
+        search = GridSearchCV(
+            estimator=model_pipeline,
+            param_grid=config["param_grid"],
+            scoring="roc_auc",
+            cv=5,
+            n_jobs=None,
+            refit=True,
+        )
+
         with mlflow.start_run(run_name=model_name):
-            model_pipeline.fit(X_train, y_train)
-            metrics = evaluate_model(model_pipeline, X_test, y_test)
+            search.fit(X_train, y_train)
+            best_pipeline = search.best_estimator_
+            metrics = evaluate_model(best_pipeline, X_test, y_test)
             model_results[model_name] = metrics
 
-            mlflow.log_params(
-                {
-                    "model_name": model_name,
-                    "max_iter": getattr(estimator, "max_iter", None),
-                    "random_state": getattr(estimator, "random_state", None),
-                    "n_estimators": getattr(estimator, "n_estimators", None),
-                    "min_samples_leaf": getattr(estimator, "min_samples_leaf", None),
-                    "class_weight": getattr(estimator, "class_weight", None),
-                }
-            )
+            mlflow.log_params({"model_name": model_name, **search.best_params_})
             mlflow.log_metrics({key: float(value) for key, value in metrics.items()})
 
             plot_path = artifact_path / f"{model_name}_metrics.png"
             plot_metric_summary(
                 plot_path,
                 y_test,
-                model_pipeline.predict(X_test),
-                model_pipeline.predict_proba(X_test)[:, 1],
+                best_pipeline.predict(X_test),
+                best_pipeline.predict_proba(X_test)[:, 1],
             )
             mlflow.log_artifact(str(plot_path), artifact_path="plots")
 
             joblib_path = artifact_path / f"{model_name}.joblib"
-            joblib.dump(model_pipeline, joblib_path)
+            joblib.dump(best_pipeline, joblib_path)
             mlflow.log_artifact(str(joblib_path), artifact_path="models")
 
             if best_metrics is None or metrics["roc_auc"] > best_metrics["roc_auc"]:
                 best_name = model_name
-                best_model = model_pipeline
+                best_model = best_pipeline
                 best_metrics = metrics
 
     if best_model is None or best_name is None:
