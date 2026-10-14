@@ -2,6 +2,8 @@
 
 This document records the live validation evidence for the heart disease prediction MLOps project.
 
+> **Evidence is historical:** The Docker and Kind checks below were performed with an earlier model artifact, before the preprocessing pipeline added categorical one-hot encoding. The recorded prediction probability (`0.444574`) does not match the current local model response (`0.455364`). Rebuild the image and repeat the Docker/Kubernetes checks before treating this as evidence for the current artifact or the BITS lab environment. The Kind Service's recorded external IP was `<pending>`; API access was through `kubectl port-forward`, not a public URL.
+
 ## 1. Docker Evidence
 
 ### Image build
@@ -205,4 +207,4 @@ Prediction response:
 
 ## 3. Conclusion
 
-Both Docker and Kubernetes deployments were validated successfully using the actual running application. The containerized app responds correctly on `/health` and `/predict`, and the Kubernetes deployment is running with healthy pods and a reachable API service.
+At the time these checks were recorded, Docker and local Kind served the application successfully on `/health` and `/predict`. This historical evidence does not validate the current model artifact, a public endpoint, or a deployment in the BITS lab.

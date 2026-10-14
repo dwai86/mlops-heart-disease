@@ -13,8 +13,8 @@ This repository implements an end-to-end machine learning operations pipeline fo
 - `Dockerfile` — container for the model-serving API
 - `kubernetes/deployment.yaml` — deployment template for local Kubernetes
 - `monitoring/prometheus.yml` — Prometheus scraping config
-- `docs/Heart_Disease_MLOps_Final_Report.pdf` — final assignment report
-- `screenshots/Heart Disease Prediction MLOps Architecture.png` — architecture diagram
+- `docs/Heart_Disease_MLOps_Interactive_Report.html` — interactive report source; export a PDF for submission
+- `screenshots/` — EDA charts and the updated `Heart Disease Prediction MLOps Architecture.svg`
 
 ## Dataset
 
@@ -87,9 +87,9 @@ pytest -q
 
 ## Documentation
 
-See the [final report](docs/Heart_Disease_MLOps_Final_Report.pdf)
-for the project details, including EDA, model development,
-experiment tracking, deployment, and monitoring.
-
-The [system architecture diagram](<screenshots/Heart Disease Prediction MLOps Architecture.png>)
-is also available in the repository.
+Open the [interactive final report](docs/Heart_Disease_MLOps_Interactive_Report.html)
+for EDA, model development, experiment tracking, deployment, monitoring,
+and the current architecture diagram. The standalone updated diagram is
+available as [SVG](<screenshots/Heart Disease Prediction MLOps Architecture.svg>).
+Export and inspect a PDF copy before submission; the PDF is not generated in
+the repository yet.
