@@ -1,0 +1,2 @@
+2026/10/14 16:28:42 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+Artifacts saved to /home/s2025ae05189/workspace/mlops-heart-disease/artifacts
