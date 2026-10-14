@@ -205,6 +205,17 @@ Prediction response:
 }
 ```
 
-## 3. Conclusion
+## 3. Additional Local Kubernetes Screenshot Evidence
 
-At the time these checks were recorded, Docker and local Kind served the application successfully on `/health` and `/predict`. This historical evidence does not validate the current model artifact, a public endpoint, or a deployment in the BITS lab.
+The following screenshots capture a local Kubernetes deployment and health check:
+
+- `screenshots/Kubernetes_Deployment1.png` — the `heart-disease-api` Deployment is available; its pod is `1/1 Running`; the Service is `NodePort` on `8000:30080`; and `http://127.0.0.1:8000/health` returned HTTP 200 with `{"status":"ok"}`.
+- `screenshots/Kubernetes_Deployment2.png` — deployment, pod and Service status, followed by a successful FastAPI health check (`HTTP Status: 200`).
+
+The command visible in the screenshots uses Kubernetes context `kind-heartdisease`. This evidence therefore documents a local Kind cluster, not Minikube. The displayed deployment has one replica and uses a NodePort Service. The screenshots demonstrate the health endpoint; they do not show a Kubernetes `/predict` request.
+
+The screenshot-matching manifest is `kubernetes/local-nodeport.yaml`. It configures the `heart-disease-api:latest` image, one replica, a readiness probe on `/health`, and a NodePort Service on port 30080. The repository's `kubernetes/deployment.yaml` remains a separate two-replica LoadBalancer manifest.
+
+## 4. Conclusion
+
+The evidence includes BITS lab Docker validation of `/health`, `/predict` and `/metrics`, as well as local Kubernetes health validation documented in the screenshots above. The original Docker and Kind records in sections 1 and 2 are historical checks using an earlier model artifact; the additional Kubernetes screenshots establish a successful health check for the deployment shown there.

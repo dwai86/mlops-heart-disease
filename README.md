@@ -11,11 +11,12 @@ This repository implements an end-to-end machine learning operations pipeline fo
 - `tests/` — unit tests for data processing and modeling
 - `.github/workflows/ci.yml` — GitHub Actions pipeline for lint/test/train
 - `Dockerfile` — container for the model-serving API
-- `kubernetes/deployment.yaml` — deployment template for local Kubernetes
+- `kubernetes/deployment.yaml` — two-replica Deployment with a LoadBalancer Service
+- `kubernetes/local-nodeport.yaml` — single-replica local Deployment with a NodePort Service and readiness probe
 - `monitoring/prometheus.yml` — Prometheus scraping config
 - `docs/Heart_Disease_MLOps_Interactive_Report.html` — interactive report source; export a PDF for submission
-- `screenshots/` — EDA charts and the updated architecture diagram
-  - `screenshots/bits lab evidence/` — screenshots from the BITS lab deployment, API validation, CI, and monitoring
+- `screenshots/` — EDA charts, architecture diagrams, and Kubernetes deployment screenshots
+  - `screenshots/bits lab evidence/` — BITS lab test, training, Docker build, and API validation evidence
 
 ## Dataset
 
@@ -75,7 +76,7 @@ Preprocessing + trained classifier
 
 - GitHub Actions automatically installs dependencies, runs the unit tests, and executes the model training job.
 - Docker builds the API container locally or in CI.
-- Kubernetes manifests define a scalable deployment and a LoadBalancer service for serving the API.
+- `kubernetes/deployment.yaml` provides a two-replica LoadBalancer configuration; `kubernetes/local-nodeport.yaml` is the local NodePort configuration used for the single-replica Kubernetes health-check evidence in `screenshots/Kubernetes_Deployment1.png` and `screenshots/Kubernetes_Deployment2.png`.
 - Prometheus scrapes `/metrics` for request counts and latency monitoring.
 
 ## Testing
