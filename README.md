@@ -51,7 +51,7 @@ The project uses the Cleveland subset of the heart disease UCI dataset. The requ
 
 ## Model training and evaluation
 
-The training pipeline loads the Cleveland dataset, converts the target into a binary classification problem (0 = no disease, 1 = disease), imputes missing values, standardizes the numeric inputs, and fits both logistic regression and random forest classifiers. Model performance is evaluated with accuracy, precision, recall, F1-score, and ROC-AUC. Metrics are logged to MLflow at `mlruns/`.
+The training pipeline loads the Cleveland dataset, converts the target into a binary classification problem (0 = no disease, 1 = disease), imputes missing values, standardizes numeric inputs, and imputes and one-hot encodes categorical inputs within the model pipeline. It fits both logistic regression and random forest classifiers. Model performance is evaluated with accuracy, precision, recall, F1-score, and ROC-AUC. Metrics are logged to MLflow at `mlruns/`.
 
 ## Architecture
 

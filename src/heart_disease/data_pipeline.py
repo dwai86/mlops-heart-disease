@@ -14,7 +14,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV, train_test_split, StratifiedKFold
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 matplotlib.use("Agg")
 
@@ -35,6 +36,17 @@ FEATURE_COLUMNS = [
 ]
 TARGET_COLUMN = "target"
 DATASET_COLUMNS = FEATURE_COLUMNS + [TARGET_COLUMN]
+NUMERIC_FEATURES = ["age", "trestbps", "chol", "thalach", "oldpeak"]
+CATEGORICAL_FEATURES = [
+    "sex",
+    "cp",
+    "fbs",
+    "restecg",
+    "exang",
+    "slope",
+    "ca",
+    "thal",
+]
 
 
 def load_dataset(path: str | Path) -> pd.DataFrame:
@@ -62,10 +74,27 @@ def prepare_training_data(frame: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]
 
 
 def build_model_pipeline(model) -> Pipeline:
-    return Pipeline(
+    numeric_pipeline = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler()),
+        ]
+    )
+    categorical_pipeline = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("encoder", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("numeric", numeric_pipeline, NUMERIC_FEATURES),
+            ("categorical", categorical_pipeline, CATEGORICAL_FEATURES),
+        ]
+    )
+    return Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
             ("model", model),
         ]
     )
