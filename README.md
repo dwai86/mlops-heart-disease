@@ -14,7 +14,8 @@ This repository implements an end-to-end machine learning operations pipeline fo
 - `kubernetes/deployment.yaml` — deployment template for local Kubernetes
 - `monitoring/prometheus.yml` — Prometheus scraping config
 - `docs/Heart_Disease_MLOps_Interactive_Report.html` — interactive report source; export a PDF for submission
-- `screenshots/` — EDA charts and the updated `Heart Disease Prediction MLOps Architecture.svg`
+- `screenshots/` — EDA charts and the updated architecture diagram
+  - `screenshots/bits lab evidence/` — screenshots from the BITS lab deployment, API validation, CI, and monitoring
 
 ## Dataset
 
