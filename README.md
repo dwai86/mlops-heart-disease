@@ -95,3 +95,7 @@ and the current architecture diagram. The standalone updated diagram is
 available as [SVG](<screenshots/Heart Disease Prediction MLOps Architecture.svg>).
 Export and inspect a PDF copy before submission; the PDF is not generated in
 the repository yet.
+
+### Video demonstration
+
+[Watch the project walkthrough](https://drive.google.com/file/d/10s3rjoWsSsPucqV7k0s7a4kNOKY1ZHZJ/view?usp=sharing).
